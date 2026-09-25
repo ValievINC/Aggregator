@@ -19,6 +19,19 @@ namespace Films
 
             int stars = (int)Math.Round(rating);
             var title = $"{filmname} ({year})";
+
+            Console.WriteLine(GetCategory(rating));
+        }
+
+        static string GetCategory(float rating)
+        {
+            if (rating > 8)
+                return "high";
+
+            if (rating > 5)
+                return "mid";
+
+            return "low";
         }
     }
 }
