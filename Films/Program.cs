@@ -10,17 +10,17 @@ namespace Films
     {
         static void Main(string[] args)
         {
-            string filmname = "Avengers";
-            int year = 2019;
-            float rating = 8.4f;
-            int ageRating = 18;
-            long earned = 2_800_000_000L;
-            string country = "USA";
+            BadCodeExample.RefactorMe();
 
-            int stars = (int)Math.Round(rating);
-            var title = $"{filmname} ({year})";
+            //string filmname = "Avengers";
+            //int year = 2019;
+            //float rating = 8.4f;
+            //int ageRating = 18;
+            //long earned = 2_800_000_000L;
+            //string country = "USA";
 
-            Console.WriteLine(GetCategory(rating));
+            //int stars = (int)Math.Round(rating);
+            // Console.WriteLine(GetCategory(rating));
         }
 
         static string GetCategory(float rating)
