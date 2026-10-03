@@ -5,18 +5,12 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Films;
 
 namespace Films
 {
     public static class BadCodeExample
     {
-        enum WatchStatus
-        {
-            NotWatched = 0,
-            Watching = 1,
-            Watched = 2,
-        }
-
         const int CardWidth = 20;
 
         static void PrintSeparator()
@@ -61,5 +55,12 @@ namespace Films
             PrintMovie("Dune", 2021, 8.0, WatchStatus.Watching);
             PrintMovie("Ералаш", 1970, 10.0, WatchStatus.NotWatched);
         }
+    }
+
+    public enum WatchStatus
+    {
+        NotWatched,
+        Watching,
+        Watched
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Films
 {
@@ -10,28 +11,56 @@ namespace Films
     {
         static void Main(string[] args)
         {
-            BadCodeExample.RefactorMe();
+            string filmname = null;
+            int year = 2019;
+            float rating = 7.4f;
+            int ageRating = 18;
+            long earned = 2_800_000_000L;
+            string country = "USA";
+            WatchStatus watchStatus = WatchStatus.NotWatched;
+            int stars = (int)Math.Round(rating);
 
-            //string filmname = "Avengers";
-            //int year = 2019;
-            //float rating = 8.4f;
-            //int ageRating = 18;
-            //long earned = 2_800_000_000L;
-            //string country = "USA";
+            string mark = "";
+            if (rating >= 8)
+                mark = "Хит";
+            else
+                mark = "Обычный фильм";
 
-            //int stars = (int)Math.Round(rating);
-            // Console.WriteLine(GetCategory(rating));
+            mark = rating >= 8
+                ? "Хит"
+                : "Обычный фильм";
+
+            string title = "";
+            if (filmname != null)
+                title = filmname;
+            else
+                title = $"Без названия";
+
+            title = filmname ?? "Без названия";
+
+            int? filmnameLenght = filmname?.Length;
+
+            var result = 11 % 100;
         }
 
-        static string GetCategory(float rating)
+        static string GetWatchStatusName(WatchStatus watchStatus)
         {
-            if (rating > 8)
-                return "high";
+            string result = "";
 
-            if (rating > 5)
-                return "mid";
+            switch (watchStatus)
+            {
+                case WatchStatus.Watched:
+                    result = "Просмотрено";
+                    break;
+                case WatchStatus.NotWatched:
+                    result = "Не смотрел";
+                    break;
+                case WatchStatus.Watching:
+                    result = "Смотрю";
+                    break;
+            }
 
-            return "low";
+            return result;
         }
     }
 }
