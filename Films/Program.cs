@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Films
 {
@@ -11,117 +13,89 @@ namespace Films
     {
         static void Main(string[] args)
         {
-            string title1 = "The Matrix";
-            string title2 = "Dune";
-            string title3 = "Tenet";
-            double rating1 = 8.7;
-            double rating2 = 8.0;
-            double rating3 = 7.3;
+            var path = Path.Combine(Environment.CurrentDirectory, "9000plus.csv");
+            var fileExists = File.Exists(path);
 
-            string[] titles = new string[3];
-            titles[0] = "The Matrix";
-            titles[1] = "Dune";
-            titles[2] = "Tenet";
-            // Console.WriteLine(titles[2].Length);
+            string[] lines = File.ReadAllLines("9000plus.csv", Encoding.UTF8);
+            Console.WriteLine(lines.Length);
 
-            //double[] ratings = new double[3];
-            //ratings[0] = 8.7;
-            //ratings[1] = 8.0;
-            //ratings[2] = 7.3;
+            var titles = new List<string>();
+            var genresLists = new List<string>();
+            var ratings = new List<double>();
+            var years = new List<int>();
+            var releases = new List<DateTime>();
 
-            //var ratings = new double[] { 8.7, 8.0, 7.3 };
-            //var ratings = new[] { 8.7, 8.0, 7.3 };
-            double[] ratings = { 8.7, 8.0, 7.3 };
-
-            ratings[0] = 10.0;
-            ratings[1] = 2.0;
-
-            //Console.WriteLine(string.Join(", ", ratings));
-
-            double averageRating = GetAverageRating(ratings);
-            TurnToFive(ratings);
-
-            var years = new int[3];
-            var movieNames = new string[3];
-
-            //Console.WriteLine(years[0]);
-            //Console.WriteLine(movieNames[0].Length);
-
-            int year = 2000;
-            int otherYear = year;
-
-            year = 2005;
-
-            int[,] scores =
+            for (int i = 1; i < lines.Length; i++)
             {
-                { 9, 10, 5, 3 }, // Зритель 1
-                { 9, 10, 2, 3 }, // Зритель 2
-                { 9, 10, 5, 8 }, // Зритель 3
-            };
+                var fields = Parser.ParseCsvLine(lines[i]);
+                if (fields.Count != 9)
+                    continue;
 
-            for (int viewer = 0; viewer < scores.GetLength(0); viewer++)
+                years.Add(int.Parse(fields[0].Split('-')[0]));
+                releases.Add(DateTime.Parse(fields[0]));
+                titles.Add(fields[1]);
+                genresLists.Add(fields[7]);
+                ratings.Add(double.Parse(fields[5], CultureInfo.InvariantCulture));
+            }
+
+            var genreCount = new Dictionary<string, int>();
+
+            foreach (var genreList in genresLists)
             {
-                for (int movie = 0; movie < scores.GetLength(1); movie++)
+                var genres = genreList.Split(new[] { ", " }, StringSplitOptions.None);
+
+                foreach (var genre in genres)
                 {
-                    //Console.WriteLine(scores[viewer, movie]);
+                    if (!genreCount.ContainsKey(genre))
+                        genreCount[genre] = 0;
+
+                    genreCount[genre]++;
                 }
             }
 
-            var result = scores.Rank;
-
-            string[][] casts = new string[3][];
-            casts[0] = new[] { "Катя", "Миша", "Маша" }; 
-            casts[1] = new[] { "Катя", "Миша" }; 
-            casts[2] = new[] { "Катя" }; 
-
-            Console.WriteLine(casts.Length);
-            Console.WriteLine(casts[0].Length);
-            Console.WriteLine(casts[1].Length);
-
-            Console.WriteLine(casts[1][0]);
-
-            for (int movie = 0; movie < casts.Length; movie++)
+            var ratingsByTitle = new Dictionary<string, double>();
+            List<string> missedFilms = new List<string>();
+            for (int i = 0; i < titles.Count; i++)
             {
-                foreach (var actor in casts[movie])
-                {
-                    Console.WriteLine(actor);
-                }
-                Console.WriteLine("");
+                string key = $"{titles[i]} ({years[i]})";
+                if (!ratingsByTitle.Keys.Contains(key))
+                    ratingsByTitle.Add(key, ratings[i]);
+                else
+                    missedFilms.Add(key);
             }
 
-            int[][][] a;
-            int[][,] b;
-            int[,][] c;
+            var report = "";
+            foreach (var title in titles)
+                report += title + ", ";
+
+            var builder = new StringBuilder();
+            foreach (var title in titles)
+            {
+                builder.Append(title);
+                builder.Append(", ");
+            }
+            var report2 = builder.ToString();
+
+            var averageRating = GetAverageRating(ratings);
+
+            Console.WriteLine("{0} ({1}) - {2}", titles[0], years[0], ratings[0]);
+            var output = String.Format(CultureInfo.InvariantCulture, "Средний рейтинг фильмов: {0:0.00}", averageRating);
+            Console.WriteLine(output);
+
+            var release = releases[0];
+            Console.WriteLine("Премьера фильма: {0:dd.MM.yyyy}", release);
+
+            Console.WriteLine($"Новый \t \n фильм: \"{titles[0]}\"");
+            //var path = "C:\\Users\\genna\\OneDrive\\Рабочий стол\\Пекусы\\Aggregator\\Films";
         }
 
-        private static double GetAverageRating(double rating1, double rating2, double rating3)
-        {
-            return (rating1 + rating2 + rating3) / 3.0;
-        }
-
-        private static double GetAverageRating(double[] ratings)
+        static double GetAverageRating(List<double> ratios)
         {
             double sum = 0;
+            foreach (var ratio in ratios)
+                sum += ratio;
 
-            foreach (double rating in ratings)
-            {
-                sum += rating;
-            }
-
-            //for (int i = 0; i < ratings.Length; i++)
-            //{
-            //    sum += ratings[i];
-            //}
-
-            return (sum / ratings.Length);
-        }
-
-        private static void TurnToFive(double[] ratings)
-        {
-            for (int i = 0; i < ratings.Length; i++)
-            {
-                ratings[i] = ratings[i] / 2;
-            }
+            return sum / ratios.Count;
         }
     }
 }
