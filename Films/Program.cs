@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Films.Core;
 
 namespace Films
 {
@@ -76,7 +77,7 @@ namespace Films
             }
             var report2 = builder.ToString();
 
-            var averageRating = GetAverageRating(ratings);
+            var averageRating = Utils.GetAverageRating(ratings);
 
             Console.WriteLine("{0} ({1}) - {2}", titles[0], years[0], ratings[0]);
             var output = String.Format(CultureInfo.InvariantCulture, "Средний рейтинг фильмов: {0:0.00}", averageRating);
@@ -86,16 +87,6 @@ namespace Films
             Console.WriteLine("Премьера фильма: {0:dd.MM.yyyy}", release);
 
             Console.WriteLine($"Новый \t \n фильм: \"{titles[0]}\"");
-            //var path = "C:\\Users\\genna\\OneDrive\\Рабочий стол\\Пекусы\\Aggregator\\Films";
-        }
-
-        static double GetAverageRating(List<double> ratios)
-        {
-            double sum = 0;
-            foreach (var ratio in ratios)
-                sum += ratio;
-
-            return sum / ratios.Count;
         }
     }
 }

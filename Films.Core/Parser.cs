@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Films
+namespace Films.Core
 {
     public static class Parser
     {
@@ -19,7 +17,6 @@ namespace Films
                 char c = line[i];
                 if (inQuotes)
                 {
-
                     if (c == '"' && i + 1 < line.Length && line[i + 1] == '"')
                     {
                         field.Append('"');
@@ -45,6 +42,13 @@ namespace Films
             }
             fields.Add(field.ToString());
             return fields;
+        }
+
+        public static string EscapeCsvField(string field)
+        {
+            if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+                return "\"" + field.Replace("\"", "\"\"") + "\"";
+            return field;
         }
     }
 }

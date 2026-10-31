@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="Films/Films.csproj" Id="ebbb968e-c64a-4b63-8005-47b294d1a055" />
+  <Project Path="Films.Core/Films.Core.csproj" />
+  <Project Path="Films.Tests/Films.Tests.csproj" Id="4bb79a66-a83d-4eb1-9d15-245052c3f6ed" />
+  <Project Path="Films/Films.csproj" />
 </Solution>
